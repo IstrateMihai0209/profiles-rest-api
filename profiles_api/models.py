@@ -15,8 +15,22 @@ class UserProfileManager(BaseUserManager):
 
         user.set_password(password) #we use this to make the password be encrypted
         user.save(using=self._db) #we use self._db if we have multiple databases
+
+        return user
+
+    def create_superuser(self, email, name, password=None):
+        #Create a super user
+        user = self.create_user(email, name, password)
+
+        user.is_superuser = True#built-in "is_superuser" variable
+        user.is_staff = True #built-in "is_staff" variable
+        user.save(using=self._db)
+
+        return user
+
 #######################################################################################################
 #######################################################################################################
+
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     #Database model for users
     email = models.EmailField(max_length=255, unique=True)
